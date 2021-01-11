@@ -5,17 +5,26 @@ from analysis import (NamesCollector, TryExceptDetector, IfGuardZeroDivision)
 class Analyser:
 
 	@staticmethod
-	def read_source_file(file_name):
+	def full_analysis():
+		return Analyser([
+			TryExceptDetector,
+			IfGuardZeroDivision
+		])
+
+	@staticmethod
+	def read_file(file_name):
 		with open(file_name) as f:
-			return list(f)
+			return f.read()
 
 	def __init__(self, analysis_classes):
 		self.names = NamesCollector()
 		self.analysis = tuple(cls(self.names) for cls in analysis_classes)
 
 	def analyse_source_file(self, file_name):
-		lines = self.read_source_file(file_name)
-		return self.analyse_root(ast.parse("".join(lines)))
+		return self.analyse_source(self.read_file(file_name))
+	
+	def analyse_source(self, source):
+		return self.analyse_root(ast.parse(source))
 
 	def analyse_root(self, root):
 		self.visit([], root)
@@ -34,10 +43,7 @@ class Analyser:
 
 def analyse_files(file_name_list):
 	import json
-	analyser = Analyser([
-		TryExceptDetector,
-		IfGuardZeroDivision
-	])
+	analyser = Analyser.full_analysis()
 	for file_name in file_name_list:
 		print("=== {} ===".format(file_name))
 		print(json.dumps(analyser.analyse_source_file(file_name), indent=4))
