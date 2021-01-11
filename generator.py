@@ -93,6 +93,7 @@ def q_names(analysis, lang='en'):
     opt(n, 'built_in_function')
   random.shuffle(options)
   return {
+    'type': 'names',
     'question': t(lang, 'select_variables'),
     'options': options
   }
@@ -122,6 +123,7 @@ def q_try_except(analysis, lang='en'):
     options.append(opt(random.choice(no_lines), 'try_line_no'))
   random.shuffle(options)
   return {
+    'type': 'try_except',
     'question': t(lang, 'select_raise_line').format(case['except']),
     'options': options
   }
@@ -139,6 +141,7 @@ def q_guard_zero_division(analysis, lang='en'):
   ]
   random.shuffle(options)
   return {
+    'type': 'guard_zero_division',
     'question': t(lang, 'select_purpose').format(case['if']),
     'options': options
   }
@@ -158,6 +161,7 @@ def q_accept_input(analysis, lang='en'):
   ]
   random.shuffle(options)
   return {
+    'type': 'accept_input',
     'question': t(lang, 'select_purpose').format(case),
     'options': options
   }
